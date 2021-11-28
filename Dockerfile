@@ -1,15 +1,11 @@
-FROM registry-docker.riachuelo.net:5000/openjdk:8-jre
+FROM openjdk:11
 
-MAINTAINER Riachuelo Developer Team
 
-VOLUME /config
+COPY /target/*.jar /usr/app/copv-comprovantes-transacoes-java.jar
+COPY target/classes/logback-spring.xml /usr/app/
 
-ADD target/copv-comprovantes-transacoes-java.jar copv-comprovantes-transacoes-java.jar
+COPY target/classes/*.properties /usr/app/
 
-COPY target/classes/logback.xml /config/
-
-COPY target/classes/config/* /config/
-
-ENV JAVA_OPTS="-Xmx256m -Xms256m -XX:MetaspaceSize=48m -XX:+UseG1GC -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dlogging.config=file:/config/logback.xml -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true"
-
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar copv-comprovantes-transacoes-java.jar" ]
+ENV profile="prd"
+EXPOSE 8080
+ENTRYPOINT ["java", "-Dspring.profiles.active=${profile}","-Duser.timezone=America/Sao_Paulo", "-jar", "/usr/app/copv-comprovantes-transacoes-java.jar"]
