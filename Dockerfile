@@ -5,7 +5,7 @@ COPY /target/*.jar /usr/app/app.jar
 
 
 WORKDIR /usr/app
-EXPOSE 8080
+EXPOSE 8083
 CMD echo "START"; \
 java \
 -Ddd.profiling.enabled=false \
