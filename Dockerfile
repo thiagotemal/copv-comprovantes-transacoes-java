@@ -1,11 +1,20 @@
-FROM openjdk:11
+FROM adoptopenjdk/openjdk11:ubi
 
 
-COPY /target/*.jar /usr/app/copv-comprovantes-transacoes-java.jar
-COPY target/classes/logback-spring.xml /usr/app/
+COPY /target/*.jar /usr/app/app.jar
 
-COPY target/classes/*.properties /usr/app/
 
-ENV profile="prd"
+WORKDIR /usr/app
 EXPOSE 8080
-ENTRYPOINT ["java", "-Dspring.profiles.active=${profile}","-Duser.timezone=America/Sao_Paulo", "-jar", "/usr/app/copv-comprovantes-transacoes-java.jar"]
+CMD echo "START"; \
+java \
+-Ddd.profiling.enabled=false \
+-Ddd.logs.injection=true \
+-Ddd.trace.analytics.enabled=false \
+-Ddd.env=prd \
+-Dspring.profiles.active=${profile} \
+-Dstyle.color=never \
+-Dspring.output.ansi.enabled=never \
+-Duser.timezone=America/Sao_Paulo \
+-jar app.jar; \
+echo "FINISH"
